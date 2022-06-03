@@ -42,7 +42,7 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         
-    - name: Build, tag, and push the image to Amazon ECR for Cats app
+    - name: Build, tag, and push the image to Amazon ECR for Dogs app
       id: build-image-dogs
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
