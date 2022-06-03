@@ -5,3 +5,14 @@ variable "instance_type" {
   type        = string
 }
 
+variable "my_private_ip" {
+  default     = "172.31.50.43"
+  description = "Cloud9 Private IP"
+  type        = string
+}
+
+variable "my_public_ip" {
+  default     = "52.86.249.109"
+  description = "Cloud9 Public IP"
+  type        = string
+}
