@@ -12,7 +12,7 @@ variable "my_private_ip" {
 }
 
 variable "my_public_ip" {
-  default     = "52.86.249.109"
+  default     = "100.26.136.239"
   description = "Cloud9 Public IP"
   type        = string
 }
