@@ -57,6 +57,7 @@ resource "aws_instance" "my_amazon" {
   vpc_security_group_ids      = [aws_security_group.my_sg.id]
   associate_public_ip_address = true
   iam_instance_profile        = data.aws_iam_instance_profile.instance_profile.name
+  user_data                   = "${file("install_packages.sh")}"
 
   lifecycle {
     create_before_destroy = true
@@ -72,12 +73,12 @@ resource "aws_instance" "my_amazon" {
 
 # Security Group
 resource "aws_security_group" "my_sg" {
-  name        = "allow_http"
+  name        = "web_sg"
   description = "Allow http inbound traffic"
   vpc_id      = data.aws_vpc.default.id
 
   ingress {
-    description      = "SSH from everywhere"
+    description      = "http 8080 from everywhere"
     from_port        = 8080
     to_port          = 8080
     protocol         = "tcp"
@@ -86,12 +87,20 @@ resource "aws_security_group" "my_sg" {
   }
 
   ingress {
-    description      = "SSH from everywhere"
+    description      = "http 8081 from everywhere"
     from_port        = 8081
     to_port          = 8081
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
+  }
+  
+  ingress {
+    description      = "SSH from Cloud9"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = ["${var.my_private_ip}/32", "${var.my_public_ip}/32"]
   }
 
   egress {
