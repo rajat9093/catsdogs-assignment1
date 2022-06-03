@@ -2,8 +2,6 @@ name: Deploy to Amazon ECS
 on:
   pull_request:
     branches: [ master ]
-    tags:
-      - .*
 
 jobs:
   deploy:
@@ -26,16 +24,16 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Set Tag Number
-      id: tag-number
-      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+    - name: Set $VERSION variable
+        id: version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
 
     - name: Build, tag, and push the image to Amazon ECR for Cats app
       id: build-image-cats
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: ${{ steps.tag-number.outputs.tag }}
+        IMAGE_TAG: ${{ steps.version.outputs.VERSION }}
       run: |
         cd cats
         # Build a docker container and push it to ECR 
